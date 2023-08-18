@@ -12,11 +12,11 @@ export default function Login({ navigation }) {
         // console.log(`clicked by ${email} with pasword ${password}`);
         // if (email === 'Abash' && password === '1234') {
         //     Alert.alert("Login Successfull")
-        //     navigation.navigate("Clients", { userDetails: `${email}`})
+        //     navigation.navigate("ClientList", { userDetails: `${email}`})
         // } else {
         //     Alert.alert("Email or Password is wrong")
         // }
-        navigation.navigate("Clients", { userDetails: `${email}`})
+        navigation.navigate("ClientList", { userDetails: `${email}`})
       }
 
     // const handleSubmit = async () => {
