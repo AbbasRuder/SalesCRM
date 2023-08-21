@@ -2,13 +2,14 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import React from 'react'
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function ClientList({ route, navigation }) {
   console.log(route.params)
   const { userDetails } = route.params
 
   const handlePress = () => {
-    navigation.navigate("ClientDetails")
+    navigation.navigate("Client-Details")
   }
 
   const data = [
@@ -69,12 +70,21 @@ export default function ClientList({ route, navigation }) {
           <View className="p-4 flex-row gap-4 items-center justify-center bg-[#FFF5E4]">
             <Ionicons name="person-circle" size={50} color="black" />
             <Text className="text-xl">Hello Abbash Ali {userDetails}</Text>
-
           </View>
 
-          <View className="p-4 bg-[#FFD1D1] rounded-lg">
-            <Text className="my-4 text-lg font-bold underline">Leads -</Text>
-            <View className="flex gap-10">
+          <View className="p-4 bg-[#fff] rounded-lg">
+            <View className='mb-4 p-2 flex-row justify-between items-center'>
+              <Text className="text-lg font-bold text-slate-400 underline">Leads</Text>
+              <TouchableOpacity activeOpacity={0.6}
+                onPress={() => {navigation.navigate('Add-Client')}}>
+                <View className='p-2 flex-row items-center rounded-lg bg-slate-400'>
+                  <Text className="mr-2 text-white font-bold">Add Client</Text>
+                  <AntDesign name="addusergroup" size={22} color="#FF9494" />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View className="flex gap-6">
               {data.map((item, index) => {
                 return (
                   <TouchableOpacity activeOpacity={0.9} onPress={handlePress} key={index}>

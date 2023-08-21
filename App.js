@@ -4,7 +4,9 @@ import {NavigationContainer} from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Login from './components/login';
-import Clients from './components/clients';
+import ClientList from './components/clients/clientList';
+import ClientDetails from './components/clients/clientDetails';
+import AddClient from './components/clients/addClient';
 
 export default function App() {
   
@@ -15,7 +17,9 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator initialRouteName='Login'>
             <Stack.Screen name='Login' component={Login}/>
-            <Stack.Screen name='Clients' component={Clients}/>
+            <Stack.Screen name='Client-List' component={ClientList}/>
+            <Stack.Screen name='Client-Details' component={ClientDetails}/>
+            <Stack.Screen name='Add-Client' component={AddClient}/>
           </Stack.Navigator>
         </NavigationContainer>
     </>

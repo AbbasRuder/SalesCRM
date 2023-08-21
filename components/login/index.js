@@ -16,14 +16,14 @@ export default function Login({ navigation }) {
         // } else {
         //     Alert.alert("Email or Password is wrong")
         // }
-        navigation.navigate("ClientList", { userDetails: `${email}`})
+        navigation.navigate("Client-List", { userDetails: `${email}`})
       }
 
     // const handleSubmit = async () => {
     //     const formData = new FormData();
     //     formData.append("email", email);
     //     formData.append("password", password);
-    //     await axios.post("http://192.168.69.23/sales_crm/login.php ", formData)
+    //     await axios.post("http://localhost/sales_crm/login.php ", formData)
     //         .then(response => {
     //             console.log(response.data)
     //         })
