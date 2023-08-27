@@ -6,31 +6,33 @@ export default function Login({ navigation }) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    // console.log("send", email, password)
+    const handleSubmit = async () => {
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        };
 
-      const handleSubmit = () => {
-        // console.log(`clicked by ${email} with pasword ${password}`);
-        // if (email === 'Abash' && password === '1234') {
-        //     Alert.alert("Login Successfull")
-        //     navigation.navigate("ClientList", { userDetails: `${email}`})
-        // } else {
-        //     Alert.alert("Email or Password is wrong")
-        // }
-        navigation.navigate("Client-List", { userDetails: `${email}`})
-      }
-
-    // const handleSubmit = async () => {
-    //     const formData = new FormData();
-    //     formData.append("email", email);
-    //     formData.append("password", password);
-    //     await axios.post("http://localhost/sales_crm/login.php ", formData)
-    //         .then(response => {
-    //             console.log(response.data)
-    //         })
-    //         .catch(error => {
-    //             console.error(error)
-    //         })
-    // }
+        await axios.post("https://salescrm.webnify.in/login.php", formData, config)
+            .then(response => {
+                if(response.data.success) {
+                    // console.log(response.data);
+                    Alert.alert("Login Successful")
+                    navigation.navigate("Client-List", { 
+                        userName: response.data.result.name,
+                        userId: response.data.result.id
+                    })
+                } else {
+                    Alert.alert("Email or Password is wrong")
+                }
+            })
+            .catch(error => {
+                console.error('Request error',error)
+            })
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
