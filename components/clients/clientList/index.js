@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import { Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -75,8 +76,12 @@ export default function ClientList({ route, navigation }) {
                     <View className="p-4 rounded-lg bg-[#FFE3E1]">
                       <View className="flex flex-row gap-2 items-center justify-between">
                         <Text className="w-2/3 text-lg font-medium text-[#FF9494">{item.sc_name}</Text>
+                        <TouchableOpacity 
+                          activeOpacity={0.6} 
+                          onPress={() => Linking.openURL(`tel:+91${item.phone}`)}
+                        >
                           <MaterialIcons name="add-call" size={28} color="#FF9494" className="" />
-                      
+                        </TouchableOpacity>
                       </View>
                       <View className="mt-2">
                         <View className="flex flex-row gap-2 items-center">
