@@ -1,6 +1,7 @@
 import { SafeAreaView, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login({ navigation }) {
     const [email, setEmail] = useState("")
@@ -18,19 +19,25 @@ export default function Login({ navigation }) {
 
         await axios.post("https://salescrm.webnify.in/login.php", formData, config)
             .then(response => {
-                if(response.data.success) {
-                    // console.log(response.data);
+                if (response.data.success) {
+                    // storing login info to device storage
+                    const storeLoginData = async (id, name) => {
+                        try {
+                            await AsyncStorage.setItem('userId', id);
+                            await AsyncStorage.setItem('userName', name);
+                        } catch (e) {
+                            console.log('Error saving logging info', e)
+                        }
+                    };
+                    storeLoginData(response.data.result.id,response.data.result.name)
                     Alert.alert("Login Successful")
-                    navigation.navigate("Client-List", { 
-                        userName: response.data.result.name,
-                        userId: response.data.result.id
-                    })
+                    navigation.navigate("Client-List")
                 } else {
                     Alert.alert("Email or Password is wrong")
                 }
             })
             .catch(error => {
-                console.error('Request error',error)
+                console.error('Request error', error)
             })
     }
 

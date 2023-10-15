@@ -1,37 +1,57 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native'
 import { Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ClientList({ route, navigation }) {
   const [clientData, setClientData] = useState(null)
-  const { userId, userName } = route.params
+  const [userId, setUserId] = useState()
+  const [userName, setUserName] = useState()
 
   const isFocused = useIsFocused()
+
+
   useEffect(() => {
     if (isFocused) {
-      const formData = new FormData();
-      formData.append("id", userId);
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
-      };
-
-      axios.post("https://salescrm.webnify.in/fetch_client_info.php", formData, config)
-        .then(response => {
-          if (response.data.success) {
-            setClientData(response.data.client_details)
+      const getUserData = async () => {
+        try {
+          // -get id and name from device storage
+          const id = await AsyncStorage.getItem('userId')
+          const name = await AsyncStorage.getItem('userName')
+          if (id && name) {
+            setUserId(id)
+            setUserName(name)
           }
-        })
-        .catch(error => {
-          console.error('errorRequest', error.response)
-        })
+
+          const formData = new FormData();
+          formData.append("id", id);
+          const config = {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          };
+
+          axios.post("https://salescrm.webnify.in/fetch_client_info.php", formData, config)
+            .then(response => {
+              if (response.data.success) {
+                setClientData(response.data.client_details)
+              }
+            })
+            .catch(error => {
+              console.error('errorRequest', error.response)
+            })
+        } catch (error) {
+          console.log("Error getting user data from Async Storage", error)
+        }
+      }
+      getUserData()
+
     }
   }, [isFocused])
 
@@ -48,16 +68,33 @@ export default function ClientList({ route, navigation }) {
     })
   }
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userId')
+      await AsyncStorage.removeItem('userName')
+      navigation.navigate('Login')
+    } catch (error) {
+      console.log("Error removing user data from device storage", error)
+    }
+  }
+
   return (
     <>
       <ScrollView>
-        <View className="h-full">
-          <View className="p-4 flex-row gap-4 items-center justify-center bg-[#FFF5E4]">
-            <Ionicons name="person-circle" size={50} color="black" />
-            <Text className="text-xl">Hello {userName}</Text>
+        <View className="bg-[#fff]">
+          <View className="p-4 flex-row justify-between items-center bg-[#FFF5E4]">
+            <View className="flex-row items-center justify-center">
+              <Ionicons name="person-circle" size={50} color="black" />
+              <Text className="text-xl font-bold">Hello {userName}</Text>
+            </View>
+            <View className="flex-row items-center">
+              <TouchableOpacity onPress={handleLogout}>
+                <Ionicons name="arrow-back-circle-sharp" size={40} color="gray" />
+              </TouchableOpacity>
+            </View>
           </View>
 
-          <View className="p-4 bg-[#fff] rounded-lg">
+          <View className="p-4 rounded-lg">
             <View className='mb-4 p-2 flex-row justify-between items-center'>
               <Text className="text-lg font-bold text-slate-400 underline">Leads</Text>
               <TouchableOpacity activeOpacity={0.6}
@@ -76,8 +113,8 @@ export default function ClientList({ route, navigation }) {
                     <View className="p-4 rounded-lg bg-[#FFE3E1]">
                       <View className="flex flex-row gap-2 items-center justify-between">
                         <Text className="w-2/3 text-lg font-medium text-[#FF9494">{item.sc_name}</Text>
-                        <TouchableOpacity 
-                          activeOpacity={0.6} 
+                        <TouchableOpacity
+                          activeOpacity={0.6}
                           onPress={() => Linking.openURL(`tel:+91${item.phone}`)}
                         >
                           <MaterialIcons name="add-call" size={28} color="#FF9494" className="" />
