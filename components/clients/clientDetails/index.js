@@ -11,7 +11,6 @@ export default function ClientDetails({ navigation, route }) {
   const [remark, setRemark] = useState('');
   const [status, setStatus] = useState('');
 
-  console.log('route', route.params);
   const { clientId, userId } = route.params
 
   useEffect(() => {
@@ -70,7 +69,6 @@ export default function ClientDetails({ navigation, route }) {
     }
   }
 
-  console.log(status);
   return (
     <>
       {clientData && clientData.map((item, index) => {
